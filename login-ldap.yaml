@@ -1,0 +1,31 @@
+enabled: false 
+host: 
+port: 636
+version: 3
+ssl: true 
+start_tls: false
+opt_referrals: false
+user_dn: 'uid=[username],dc=example,dc=com'
+search_dn:
+group_dn:
+group_query:
+group_indentifier: cn
+map_username: uid
+map_fullname: givenName lastName
+map_email: mail
+
+save_grav_user: false
+store_ldap_data: false
+default_access_levels:
+  groups:
+    - ldap_users
+  access:
+    site:
+      login: 'true'
+      admin:    
+        admin:
+          login: true
+          super: true 
+      user:
+        site:
+          login: true  
