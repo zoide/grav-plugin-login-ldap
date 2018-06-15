@@ -120,10 +120,11 @@ class LoginLDAPPlugin extends Plugin
             $map_dn    = $this->config->get('plugins.login-ldap.map_dn');
 
             // Try to login via LDAP
-            $ldap->bind($username, $credentials['password']);
-
+            $ldap->bind($username.",".$search_dn, $credentials['password']);
+           
             // Create Grav User
-            $grav_user = User::load(strtolower($username));
+            $grav_username = preg_replace('/\s+/', '_', $credentials['username']);
+            $grav_user = User::load(strtolower($grav_username));
 
             // Set defaults with only thing we know... username provided
             $grav_user['login'] = $credentials['username'];
@@ -132,8 +133,9 @@ class LoginLDAPPlugin extends Plugin
 
             // If search_dn is set we can try to get information from LDAP
             if ($search_dn) {
-                $query_string = $map_username .'='. $credentials['username'];
-                $query = $ldap->query($search_dn, $query_string);
+                //$query_string = $map_username .'='. $credentials['username'];
+                $query_string = $username.",".$search_dn;
+                $query = $ldap->query( $query_string, "(objectclass=*)");
                 $results = $query->execute()->toArray();
 
                 // Get LDAP Data
